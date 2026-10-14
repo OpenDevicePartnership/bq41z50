@@ -2,7 +2,13 @@ use crate::Bq41z50;
 use crate::Bq41z50Error;
 use crate::CapacityModeState;
 use crate::device;
+use device_driver::Block;
 use embedded_batteries_async::smart_battery;
+
+// SBS string commands. These are `SMBus` block reads: a count byte followed by the text.
+const MANUFACTURER_NAME_CMD: u8 = 0x20;
+const DEVICE_NAME_CMD: u8 = 0x21;
+const DEVICE_CHEMISTRY_CMD: u8 = 0x22;
 
 impl From<device::BatteryStatus> for smart_battery::BatteryStatusFields {
     fn from(value: device::BatteryStatus) -> Self {
@@ -262,12 +268,9 @@ impl<BUS: embedded_hal_async::i2c::I2c> embedded_batteries_async::smart_battery:
     }
 
     async fn battery_status(&mut self) -> Result<smart_battery::BatteryStatusFields, Self::Error> {
-        let status = self.device.battery_status().read_async().await?;
-
-        match status.ec() {
-            smart_battery::ErrorCode::Ok => Ok(status.into()),
-            _ => Err(Bq41z50Error::BatteryStatus(status)),
-        }
+        // The error code bits report the result of the previous SBS command, not a battery fault, so they are
+        // returned to the caller in the status rather than as an error.
+        Ok(self.device.battery_status().read_async().await?.into())
     }
 
     async fn cycle_count(&mut self) -> Result<smart_battery::Cycles, Self::Error> {
@@ -308,15 +311,21 @@ impl<BUS: embedded_hal_async::i2c::I2c> embedded_batteries_async::smart_battery:
     }
 
     async fn manufacturer_name(&mut self, name: &mut [u8]) -> Result<(), Self::Error> {
-        self.device.manufacture_name().read_async(name).await.map(|_f| ())
+        self.device
+            .interface()
+            .read_block_string(MANUFACTURER_NAME_CMD, name)
+            .await
     }
 
     async fn device_name(&mut self, name: &mut [u8]) -> Result<(), Self::Error> {
-        self.device.device_name().read_async(name).await.map(|_f| ())
+        self.device.interface().read_block_string(DEVICE_NAME_CMD, name).await
     }
 
     async fn device_chemistry(&mut self, chemistry: &mut [u8]) -> Result<(), Self::Error> {
-        self.device.device_chemistry().read_async(chemistry).await.map(|_f| ())
+        self.device
+            .interface()
+            .read_block_string(DEVICE_CHEMISTRY_CMD, chemistry)
+            .await
     }
 
     async fn charging_current(&mut self) -> Result<embedded_batteries_async::charger::MilliAmps, Self::Error> {

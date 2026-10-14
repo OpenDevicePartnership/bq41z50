@@ -1,4 +1,4 @@
-// This code was generated using device-driver `2.1.0` (),
+// This code was generated using device-driver `2.1.1` (),
 // a tool distributed under MIT OR Apache-2.0 by Dion Dokter <dev@diondokter.nl>
 //
 // For more information about device-driver, visit the website: https://device-driver.com
@@ -1357,116 +1357,97 @@ impl<I> Device<I> {
         let address = self.base_address + 79;
         ::device_driver::RegisterOperation::new(self, address as u8, StateOfHealthSoh::default)
     }
-    /// Register operation:
-    /// - Address: `80`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5242880`
     #[doc(alias = "SAFETY_ALERT")]
-    pub fn safety_alert(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, SafetyAlert, u8, ::device_driver::RO, ()>
+    pub fn safety_alert(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), SafetyAlert, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 80;
-        ::device_driver::RegisterOperation::new(self, address as u8, SafetyAlert::default)
+        let address = self.base_address + 5242880;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `81`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5308416`
     #[doc(alias = "SAFETY_STATUS")]
-    pub fn safety_status(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, SafetyStatus, u8, ::device_driver::RO, ()>
+    pub fn safety_status(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), SafetyStatus, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 81;
-        ::device_driver::RegisterOperation::new(self, address as u8, SafetyStatus::default)
+        let address = self.base_address + 5308416;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `82`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5373952`
     #[doc(alias = "PF_ALERT")]
-    pub fn pf_alert(&mut self) -> ::device_driver::RegisterOperation<'_, Self, PfAlert, u8, ::device_driver::RO, ()>
+    pub fn pf_alert(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), PfAlert, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 82;
-        ::device_driver::RegisterOperation::new(self, address as u8, PfAlert::default)
+        let address = self.base_address + 5373952;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `83`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5439488`
     #[doc(alias = "PF_STATUS")]
-    pub fn pf_status(&mut self) -> ::device_driver::RegisterOperation<'_, Self, PfStatus, u8, ::device_driver::RO, ()>
+    pub fn pf_status(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), PfStatus, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 83;
-        ::device_driver::RegisterOperation::new(self, address as u8, PfStatus::default)
+        let address = self.base_address + 5439488;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `84`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5505024`
     #[doc(alias = "OPERATION_STATUS")]
-    pub fn operation_status(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, OperationStatus, u8, ::device_driver::RO, ()>
+    pub fn operation_status(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), OperationStatus, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 84;
-        ::device_driver::RegisterOperation::new(self, address as u8, OperationStatus::default)
+        let address = self.base_address + 5505024;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `85`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5570560`
     #[doc(alias = "CHARGING_STATUS")]
-    pub fn charging_status(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, ChargingStatus, u8, ::device_driver::RO, ()>
+    pub fn charging_status(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), ChargingStatus, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 85;
-        ::device_driver::RegisterOperation::new(self, address as u8, ChargingStatus::default)
+        let address = self.base_address + 5570560;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `86`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5636096`
     #[doc(alias = "GAUGING_STATUS")]
-    pub fn gauging_status(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, GaugingStatus, u8, ::device_driver::RO, ()>
+    pub fn gauging_status(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), GaugingStatus, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 86;
-        ::device_driver::RegisterOperation::new(self, address as u8, GaugingStatus::default)
+        let address = self.base_address + 5636096;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `87`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5701632`
     #[doc(alias = "MANUFACTURING_STATUS")]
     pub fn manufacturing_status(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, ManufacturingStatus, u8, ::device_driver::RO, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), ManufacturingStatus, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 87;
-        ::device_driver::RegisterOperation::new(self, address as u8, ManufacturingStatus::default)
+        let address = self.base_address + 5701632;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `88`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `5767168`
     #[doc(alias = "AFE_REG")]
-    pub fn afe_reg(&mut self) -> ::device_driver::RegisterOperation<'_, Self, AfeReg, u8, ::device_driver::RO, ()>
+    pub fn afe_reg(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), AfeReg, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 88;
-        ::device_driver::RegisterOperation::new(self, address as u8, AfeReg::default)
+        let address = self.base_address + 5767168;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
     /// Register operation:
     /// - Address: `89`
@@ -1557,109 +1538,101 @@ impl<I> Device<I> {
         let address = self.base_address + 95;
         ::device_driver::RegisterOperation::new(self, address as u8, SusTurboCurrent::default)
     }
-    /// Register operation:
-    /// - Address: `96`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6291456`
     #[doc(alias = "LIFETIME_DATA_BLOCK_1")]
     pub fn lifetime_data_block_1(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock1, u8, ::device_driver::RO, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock1, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 96;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock1::default)
+        let address = self.base_address + 6291456;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `97`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6356992`
     #[doc(alias = "LIFETIME_DATA_BLOCK_2")]
     pub fn lifetime_data_block_2(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock2, u8, ::device_driver::RO, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock2, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 97;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock2::default)
+        let address = self.base_address + 6356992;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `98`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6422528`
     #[doc(alias = "LIFETIME_DATA_BLOCK_3")]
     pub fn lifetime_data_block_3(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock3, u8, ::device_driver::RO, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock3, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 98;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock3::default)
+        let address = self.base_address + 6422528;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `99`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6488064`
     #[doc(alias = "LIFETIME_DATA_BLOCK_4")]
     pub fn lifetime_data_block_4(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock4, u8, ::device_driver::RO, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock4, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 99;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock4::default)
+        let address = self.base_address + 6488064;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `100`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6553600`
     #[doc(alias = "LIFETIME_DATA_BLOCK_5")]
     pub fn lifetime_data_block_5(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock5, u8, ::device_driver::RO, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock5, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 100;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock5::default)
+        let address = self.base_address + 6553600;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `101`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6619136`
     #[doc(alias = "LIFETIME_DATA_BLOCK_6")]
     pub fn lifetime_data_block_6(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock6, u8, ::device_driver::RW, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock6, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 101;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock6::default)
+        let address = self.base_address + 6619136;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `102`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6684672`
     #[doc(alias = "LIFETIME_DATA_BLOCK_7")]
     pub fn lifetime_data_block_7(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock7, u8, ::device_driver::RW, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock7, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 102;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock7::default)
+        let address = self.base_address + 6684672;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `103`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6750208`
     #[doc(alias = "LIFETIME_DATA_BLOCK_8")]
     pub fn lifetime_data_block_8(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock8, u8, ::device_driver::RW, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock8, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 103;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock8::default)
+        let address = self.base_address + 6750208;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
     /// Register operation:
     /// - Address: `104`
@@ -1687,133 +1660,109 @@ impl<I> Device<I> {
         let address = self.base_address + 105;
         ::device_driver::RegisterOperation::new(self, address as u8, || TurboVload::from([0, 0]))
     }
-    /// Register operation:
-    /// - Address: `106`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `6946816`
     #[doc(alias = "LIFETIME_DATA_BLOCK_11")]
     pub fn lifetime_data_block_11(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock11, u8, ::device_driver::RW, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock11, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 106;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock11::default)
+        let address = self.base_address + 6946816;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `107`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7012352`
     #[doc(alias = "LIFETIME_DATA_BLOCK_12")]
     pub fn lifetime_data_block_12(
         &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, LifetimeDataBlock12, u8, ::device_driver::RW, ()>
+    ) -> ::device_driver::CommandOperation<'_, Self, u32, (), LifetimeDataBlock12, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 107;
-        ::device_driver::RegisterOperation::new(self, address as u8, LifetimeDataBlock12::default)
+        let address = self.base_address + 7012352;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `113`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7405568`
     #[doc(alias = "DA_STATUS_1")]
-    pub fn da_status_1(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, DaStatus1, u8, ::device_driver::RO, ()>
+    pub fn da_status_1(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), DaStatus1, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 113;
-        ::device_driver::RegisterOperation::new(self, address as u8, DaStatus1::default)
+        let address = self.base_address + 7405568;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `114`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7471104`
     #[doc(alias = "DA_STATUS_2")]
-    pub fn da_status_2(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, DaStatus2, u8, ::device_driver::RO, ()>
+    pub fn da_status_2(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), DaStatus2, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 114;
-        ::device_driver::RegisterOperation::new(self, address as u8, DaStatus2::default)
+        let address = self.base_address + 7471104;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `115`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7536640`
     #[doc(alias = "GAUGE_STATUS_1")]
-    pub fn gauge_status_1(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, GaugeStatus1, u8, ::device_driver::RO, ()>
+    pub fn gauge_status_1(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), GaugeStatus1, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 115;
-        ::device_driver::RegisterOperation::new(self, address as u8, GaugeStatus1::default)
+        let address = self.base_address + 7536640;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `116`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7602176`
     #[doc(alias = "GAUGE_STATUS_2")]
-    pub fn gauge_status_2(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, GaugeStatus2, u8, ::device_driver::RW, ()>
+    pub fn gauge_status_2(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), GaugeStatus2, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 116;
-        ::device_driver::RegisterOperation::new(self, address as u8, GaugeStatus2::default)
+        let address = self.base_address + 7602176;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `117`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7667712`
     #[doc(alias = "GAUGE_STATUS_3")]
-    pub fn gauge_status_3(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, GaugeStatus3, u8, ::device_driver::RO, ()>
+    pub fn gauge_status_3(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), GaugeStatus3, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 117;
-        ::device_driver::RegisterOperation::new(self, address as u8, GaugeStatus3::default)
+        let address = self.base_address + 7667712;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `118`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7733248`
     #[doc(alias = "CB_STATUS")]
-    pub fn cb_status(&mut self) -> ::device_driver::RegisterOperation<'_, Self, CbStatus, u8, ::device_driver::RO, ()>
+    pub fn cb_status(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), CbStatus, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 118;
-        ::device_driver::RegisterOperation::new(self, address as u8, CbStatus::default)
+        let address = self.base_address + 7733248;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `119`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7798784`
     #[doc(alias = "STATE_OF_HEALTH")]
-    pub fn state_of_health(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, StateOfHealth, u8, ::device_driver::RO, ()>
+    pub fn state_of_health(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), StateOfHealth, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 119;
-        ::device_driver::RegisterOperation::new(self, address as u8, StateOfHealth::default)
+        let address = self.base_address + 7798784;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
-    /// Register operation:
-    /// - Address: `120`
-    /// - Reset value: `0`
+    /// Command operation:
+    /// - Address: `7864320`
     #[doc(alias = "FILTER_CAPACITY")]
-    pub fn filter_capacity(
-        &mut self,
-    ) -> ::device_driver::RegisterOperation<'_, Self, FilterCapacity, u8, ::device_driver::RO, ()>
+    pub fn filter_capacity(&mut self) -> ::device_driver::CommandOperation<'_, Self, u32, (), FilterCapacity, ()>
     where
-        I: ::device_driver::RegisterInterfaceBase<AddressType = u8>,
+        I: ::device_driver::CommandInterfaceBase<AddressType = u32>,
     {
-        let address = self.base_address + 120;
-        ::device_driver::RegisterOperation::new(self, address as u8, FilterCapacity::default)
+        let address = self.base_address + 7864320;
+        ::device_driver::CommandOperation::new(self, address as u32)
     }
 }
 impl<I> ::device_driver::Block for Device<I> {
@@ -2072,12 +2021,12 @@ impl core::ops::Not for StateOfHealth {
 pub struct CbStatus {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 19],
+    bits: [u8; 20],
 }
 unsafe impl ::device_driver::Fieldset for CbStatus {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 19] };
+    const ZERO: Self = Self { bits: [0; 20] };
 }
 impl CbStatus {
     /// `15:0` - Read the `cb_time_0` field.
@@ -2186,12 +2135,12 @@ impl Default for CbStatus {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 19]> for CbStatus {
-    fn from(bits: [u8; 19]) -> Self {
+impl From<[u8; 20]> for CbStatus {
+    fn from(bits: [u8; 20]) -> Self {
         Self { bits }
     }
 }
-impl From<CbStatus> for [u8; 19] {
+impl From<CbStatus> for [u8; 20] {
     fn from(val: CbStatus) -> Self {
         val.bits
     }
@@ -2269,12 +2218,12 @@ impl core::ops::Not for CbStatus {
 pub struct GaugeStatus3 {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 24],
+    bits: [u8; 32],
 }
 unsafe impl ::device_driver::Fieldset for GaugeStatus3 {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 24] };
+    const ZERO: Self = Self { bits: [0; 32] };
 }
 impl GaugeStatus3 {
     /// `15:0` - Read the `qmax_0` field.
@@ -2403,12 +2352,12 @@ impl Default for GaugeStatus3 {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 24]> for GaugeStatus3 {
-    fn from(bits: [u8; 24]) -> Self {
+impl From<[u8; 32]> for GaugeStatus3 {
+    fn from(bits: [u8; 32]) -> Self {
         Self { bits }
     }
 }
-impl From<GaugeStatus3> for [u8; 24] {
+impl From<GaugeStatus3> for [u8; 32] {
     fn from(val: GaugeStatus3) -> Self {
         val.bits
     }
@@ -2695,15 +2644,6 @@ impl GaugeStatus2 {
         let end = 255;
         let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::LE>(&self.bits, start, end) };
         raw
-    }
-    /// `95:80` - Set the `dod_0_0` field.
-    ///
-    #[doc(alias = "DOD0_0")]
-    pub fn set_dod_0_0(&mut self, value: u16) {
-        let start = 80;
-        let end = 95;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
     }
 }
 impl Default for GaugeStatus2 {
@@ -6387,12 +6327,12 @@ impl core::ops::Not for MaxTurboPower {
 pub struct AfeReg {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 21],
+    bits: [u8; 6],
 }
 unsafe impl ::device_driver::Fieldset for AfeReg {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 21] };
+    const ZERO: Self = Self { bits: [0; 6] };
 }
 impl AfeReg {
     /// `7:0` - Read the `afe_int_status` field.
@@ -6455,168 +6395,18 @@ impl AfeReg {
         let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
         raw
     }
-    /// `55:48` - Read the `afe_rxien` field.
-    ///
-    #[doc(alias = "AFE_RXIEN")]
-    #[must_use]
-    pub fn afe_rxien(&self) -> u8 {
-        let start = 48;
-        let end = 55;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `63:56` - Read the `afe_rlout` field.
-    ///
-    #[doc(alias = "AFE_RLOUT")]
-    #[must_use]
-    pub fn afe_rlout(&self) -> u8 {
-        let start = 56;
-        let end = 63;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `71:64` - Read the `afe_rhout` field.
-    ///
-    #[doc(alias = "AFE_RHOUT")]
-    #[must_use]
-    pub fn afe_rhout(&self) -> u8 {
-        let start = 64;
-        let end = 71;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `79:72` - Read the `afe_rhint` field.
-    ///
-    #[doc(alias = "AFE_RHINT")]
-    #[must_use]
-    pub fn afe_rhint(&self) -> u8 {
-        let start = 72;
-        let end = 79;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `87:80` - Read the `afe_cell_balance` field.
-    ///
-    #[doc(alias = "AFE_CELL_BALANCE")]
-    #[must_use]
-    pub fn afe_cell_balance(&self) -> u8 {
-        let start = 80;
-        let end = 87;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `95:88` - Read the `afe_adc_cc_ctrl` field.
-    ///
-    #[doc(alias = "AFE_ADC_CC_CTRL")]
-    #[must_use]
-    pub fn afe_adc_cc_ctrl(&self) -> u8 {
-        let start = 88;
-        let end = 95;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `103:96` - Read the `afe_adc_mux_ctrl` field.
-    ///
-    #[doc(alias = "AFE_ADC_MUX_CTRL")]
-    #[must_use]
-    pub fn afe_adc_mux_ctrl(&self) -> u8 {
-        let start = 96;
-        let end = 103;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `111:104` - Read the `afe_led_ctrl` field.
-    ///
-    #[doc(alias = "AFE_LED_CTRL")]
-    #[must_use]
-    pub fn afe_led_ctrl(&self) -> u8 {
-        let start = 104;
-        let end = 111;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `119:112` - Read the `afe_hw_ctrl` field.
-    ///
-    #[doc(alias = "AFE_HW_CTRL")]
-    #[must_use]
-    pub fn afe_hw_ctrl(&self) -> u8 {
-        let start = 112;
-        let end = 119;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `127:120` - Read the `afe_tmr_ctrl` field.
-    ///
-    #[doc(alias = "AFE_TMR_CTRL")]
-    #[must_use]
-    pub fn afe_tmr_ctrl(&self) -> u8 {
-        let start = 120;
-        let end = 127;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `135:128` - Read the `afe_protection` field.
-    ///
-    #[doc(alias = "AFE_PROTECTION")]
-    #[must_use]
-    pub fn afe_protection(&self) -> u8 {
-        let start = 128;
-        let end = 135;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `143:136` - Read the `afe_ocd` field.
-    ///
-    #[doc(alias = "AFE_OCD")]
-    #[must_use]
-    pub fn afe_ocd(&self) -> u8 {
-        let start = 136;
-        let end = 143;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `151:144` - Read the `afe_scc` field.
-    ///
-    #[doc(alias = "AFE_SCC")]
-    #[must_use]
-    pub fn afe_scc(&self) -> u8 {
-        let start = 144;
-        let end = 151;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `159:152` - Read the `afe_scd_1` field.
-    ///
-    #[doc(alias = "AFE_SCD1")]
-    #[must_use]
-    pub fn afe_scd_1(&self) -> u8 {
-        let start = 152;
-        let end = 159;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `167:160` - Read the `afe_scd_2` field.
-    ///
-    #[doc(alias = "AFE_SCD2")]
-    #[must_use]
-    pub fn afe_scd_2(&self) -> u8 {
-        let start = 160;
-        let end = 167;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
 }
 impl Default for AfeReg {
     fn default() -> Self {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 21]> for AfeReg {
-    fn from(bits: [u8; 21]) -> Self {
+impl From<[u8; 6]> for AfeReg {
+    fn from(bits: [u8; 6]) -> Self {
         Self { bits }
     }
 }
-impl From<AfeReg> for [u8; 21] {
+impl From<AfeReg> for [u8; 6] {
     fn from(val: AfeReg) -> Self {
         val.bits
     }
@@ -6630,21 +6420,6 @@ impl core::fmt::Debug for AfeReg {
         d.field("afe_latch_status", &self.afe_latch_status());
         d.field("afe_int_en", &self.afe_int_en());
         d.field("afe_ctrl", &self.afe_ctrl());
-        d.field("afe_rxien", &self.afe_rxien());
-        d.field("afe_rlout", &self.afe_rlout());
-        d.field("afe_rhout", &self.afe_rhout());
-        d.field("afe_rhint", &self.afe_rhint());
-        d.field("afe_cell_balance", &self.afe_cell_balance());
-        d.field("afe_adc_cc_ctrl", &self.afe_adc_cc_ctrl());
-        d.field("afe_adc_mux_ctrl", &self.afe_adc_mux_ctrl());
-        d.field("afe_led_ctrl", &self.afe_led_ctrl());
-        d.field("afe_hw_ctrl", &self.afe_hw_ctrl());
-        d.field("afe_tmr_ctrl", &self.afe_tmr_ctrl());
-        d.field("afe_protection", &self.afe_protection());
-        d.field("afe_ocd", &self.afe_ocd());
-        d.field("afe_scc", &self.afe_scc());
-        d.field("afe_scd_1", &self.afe_scd_1());
-        d.field("afe_scd_2", &self.afe_scd_2());
         d.finish()
     }
 }
@@ -6924,12 +6699,12 @@ impl core::ops::Not for ManufacturingStatus {
 pub struct GaugingStatus {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 4],
+    bits: [u8; 6],
 }
 unsafe impl ::device_driver::Fieldset for GaugingStatus {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 4] };
+    const ZERO: Self = Self { bits: [0; 6] };
 }
 impl GaugingStatus {
     /// `bit 0` - Read the `fd` field.
@@ -7158,12 +6933,12 @@ impl Default for GaugingStatus {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 4]> for GaugingStatus {
-    fn from(bits: [u8; 4]) -> Self {
+impl From<[u8; 6]> for GaugingStatus {
+    fn from(bits: [u8; 6]) -> Self {
         Self { bits }
     }
 }
-impl From<GaugingStatus> for [u8; 4] {
+impl From<GaugingStatus> for [u8; 6] {
     fn from(val: GaugingStatus) -> Self {
         val.bits
     }
@@ -14624,12 +14399,12 @@ impl core::ops::Not for MacStateOfHealthFieldsOut {
 pub struct MacCbStatusFieldsOut {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 19],
+    bits: [u8; 20],
 }
 unsafe impl ::device_driver::Fieldset for MacCbStatusFieldsOut {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 19] };
+    const ZERO: Self = Self { bits: [0; 20] };
 }
 impl MacCbStatusFieldsOut {
     /// `15:0` - Read the `cb_time_0` field.
@@ -14828,12 +14603,12 @@ impl Default for MacCbStatusFieldsOut {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 19]> for MacCbStatusFieldsOut {
-    fn from(bits: [u8; 19]) -> Self {
+impl From<[u8; 20]> for MacCbStatusFieldsOut {
+    fn from(bits: [u8; 20]) -> Self {
         Self { bits }
     }
 }
-impl From<MacCbStatusFieldsOut> for [u8; 19] {
+impl From<MacCbStatusFieldsOut> for [u8; 20] {
     fn from(val: MacCbStatusFieldsOut) -> Self {
         val.bits
     }
@@ -22592,12 +22367,12 @@ impl core::ops::Not for NoLoadRemCapFieldsOut {
 pub struct MacAfeRegFieldsOut {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 21],
+    bits: [u8; 6],
 }
 unsafe impl ::device_driver::Fieldset for MacAfeRegFieldsOut {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 21] };
+    const ZERO: Self = Self { bits: [0; 6] };
 }
 impl MacAfeRegFieldsOut {
     /// `7:0` - Read the `afe_int_status` field.
@@ -22660,156 +22435,6 @@ impl MacAfeRegFieldsOut {
         let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
         raw
     }
-    /// `55:48` - Read the `afe_rxien` field.
-    ///
-    #[doc(alias = "AFE_RXIEN")]
-    #[must_use]
-    pub fn afe_rxien(&self) -> u8 {
-        let start = 48;
-        let end = 55;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `63:56` - Read the `afe_rlout` field.
-    ///
-    #[doc(alias = "AFE_RLOUT")]
-    #[must_use]
-    pub fn afe_rlout(&self) -> u8 {
-        let start = 56;
-        let end = 63;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `71:64` - Read the `afe_rhout` field.
-    ///
-    #[doc(alias = "AFE_RHOUT")]
-    #[must_use]
-    pub fn afe_rhout(&self) -> u8 {
-        let start = 64;
-        let end = 71;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `79:72` - Read the `afe_rhint` field.
-    ///
-    #[doc(alias = "AFE_RHINT")]
-    #[must_use]
-    pub fn afe_rhint(&self) -> u8 {
-        let start = 72;
-        let end = 79;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `87:80` - Read the `afe_cell_balance` field.
-    ///
-    #[doc(alias = "AFE_CELL_BALANCE")]
-    #[must_use]
-    pub fn afe_cell_balance(&self) -> u8 {
-        let start = 80;
-        let end = 87;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `95:88` - Read the `afe_adc_cc_ctrl` field.
-    ///
-    #[doc(alias = "AFE_ADC_CC_CTRL")]
-    #[must_use]
-    pub fn afe_adc_cc_ctrl(&self) -> u8 {
-        let start = 88;
-        let end = 95;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `103:96` - Read the `afe_adc_mux_ctrl` field.
-    ///
-    #[doc(alias = "AFE_ADC_MUX_CTRL")]
-    #[must_use]
-    pub fn afe_adc_mux_ctrl(&self) -> u8 {
-        let start = 96;
-        let end = 103;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `111:104` - Read the `afe_led_ctrl` field.
-    ///
-    #[doc(alias = "AFE_LED_CTRL")]
-    #[must_use]
-    pub fn afe_led_ctrl(&self) -> u8 {
-        let start = 104;
-        let end = 111;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `119:112` - Read the `afe_hw_ctrl` field.
-    ///
-    #[doc(alias = "AFE_HW_CTRL")]
-    #[must_use]
-    pub fn afe_hw_ctrl(&self) -> u8 {
-        let start = 112;
-        let end = 119;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `127:120` - Read the `afe_tmr_ctrl` field.
-    ///
-    #[doc(alias = "AFE_TMR_CTRL")]
-    #[must_use]
-    pub fn afe_tmr_ctrl(&self) -> u8 {
-        let start = 120;
-        let end = 127;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `135:128` - Read the `afe_protection` field.
-    ///
-    #[doc(alias = "AFE_PROTECTION")]
-    #[must_use]
-    pub fn afe_protection(&self) -> u8 {
-        let start = 128;
-        let end = 135;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `143:136` - Read the `afe_ocd` field.
-    ///
-    #[doc(alias = "AFE_OCD")]
-    #[must_use]
-    pub fn afe_ocd(&self) -> u8 {
-        let start = 136;
-        let end = 143;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `151:144` - Read the `afe_scc` field.
-    ///
-    #[doc(alias = "AFE_SCC")]
-    #[must_use]
-    pub fn afe_scc(&self) -> u8 {
-        let start = 144;
-        let end = 151;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `159:152` - Read the `afe_scd_1` field.
-    ///
-    #[doc(alias = "AFE_SCD1")]
-    #[must_use]
-    pub fn afe_scd_1(&self) -> u8 {
-        let start = 152;
-        let end = 159;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
-    /// `167:160` - Read the `afe_scd_2` field.
-    ///
-    #[doc(alias = "AFE_SCD2")]
-    #[must_use]
-    pub fn afe_scd_2(&self) -> u8 {
-        let start = 160;
-        let end = 167;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
-        raw
-    }
     /// `7:0` - Set the `afe_int_status` field.
     ///
     #[doc(alias = "AFE_INT_STATUS")]
@@ -22864,153 +22489,18 @@ impl MacAfeRegFieldsOut {
         let raw = value;
         unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
     }
-    /// `55:48` - Set the `afe_rxien` field.
-    ///
-    #[doc(alias = "AFE_RXIEN")]
-    pub fn set_afe_rxien(&mut self, value: u8) {
-        let start = 48;
-        let end = 55;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `63:56` - Set the `afe_rlout` field.
-    ///
-    #[doc(alias = "AFE_RLOUT")]
-    pub fn set_afe_rlout(&mut self, value: u8) {
-        let start = 56;
-        let end = 63;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `71:64` - Set the `afe_rhout` field.
-    ///
-    #[doc(alias = "AFE_RHOUT")]
-    pub fn set_afe_rhout(&mut self, value: u8) {
-        let start = 64;
-        let end = 71;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `79:72` - Set the `afe_rhint` field.
-    ///
-    #[doc(alias = "AFE_RHINT")]
-    pub fn set_afe_rhint(&mut self, value: u8) {
-        let start = 72;
-        let end = 79;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `87:80` - Set the `afe_cell_balance` field.
-    ///
-    #[doc(alias = "AFE_CELL_BALANCE")]
-    pub fn set_afe_cell_balance(&mut self, value: u8) {
-        let start = 80;
-        let end = 87;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `95:88` - Set the `afe_adc_cc_ctrl` field.
-    ///
-    #[doc(alias = "AFE_ADC_CC_CTRL")]
-    pub fn set_afe_adc_cc_ctrl(&mut self, value: u8) {
-        let start = 88;
-        let end = 95;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `103:96` - Set the `afe_adc_mux_ctrl` field.
-    ///
-    #[doc(alias = "AFE_ADC_MUX_CTRL")]
-    pub fn set_afe_adc_mux_ctrl(&mut self, value: u8) {
-        let start = 96;
-        let end = 103;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `111:104` - Set the `afe_led_ctrl` field.
-    ///
-    #[doc(alias = "AFE_LED_CTRL")]
-    pub fn set_afe_led_ctrl(&mut self, value: u8) {
-        let start = 104;
-        let end = 111;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `119:112` - Set the `afe_hw_ctrl` field.
-    ///
-    #[doc(alias = "AFE_HW_CTRL")]
-    pub fn set_afe_hw_ctrl(&mut self, value: u8) {
-        let start = 112;
-        let end = 119;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `127:120` - Set the `afe_tmr_ctrl` field.
-    ///
-    #[doc(alias = "AFE_TMR_CTRL")]
-    pub fn set_afe_tmr_ctrl(&mut self, value: u8) {
-        let start = 120;
-        let end = 127;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `135:128` - Set the `afe_protection` field.
-    ///
-    #[doc(alias = "AFE_PROTECTION")]
-    pub fn set_afe_protection(&mut self, value: u8) {
-        let start = 128;
-        let end = 135;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `143:136` - Set the `afe_ocd` field.
-    ///
-    #[doc(alias = "AFE_OCD")]
-    pub fn set_afe_ocd(&mut self, value: u8) {
-        let start = 136;
-        let end = 143;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `151:144` - Set the `afe_scc` field.
-    ///
-    #[doc(alias = "AFE_SCC")]
-    pub fn set_afe_scc(&mut self, value: u8) {
-        let start = 144;
-        let end = 151;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `159:152` - Set the `afe_scd_1` field.
-    ///
-    #[doc(alias = "AFE_SCD1")]
-    pub fn set_afe_scd_1(&mut self, value: u8) {
-        let start = 152;
-        let end = 159;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `167:160` - Set the `afe_scd_2` field.
-    ///
-    #[doc(alias = "AFE_SCD2")]
-    pub fn set_afe_scd_2(&mut self, value: u8) {
-        let start = 160;
-        let end = 167;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
 }
 impl Default for MacAfeRegFieldsOut {
     fn default() -> Self {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 21]> for MacAfeRegFieldsOut {
-    fn from(bits: [u8; 21]) -> Self {
+impl From<[u8; 6]> for MacAfeRegFieldsOut {
+    fn from(bits: [u8; 6]) -> Self {
         Self { bits }
     }
 }
-impl From<MacAfeRegFieldsOut> for [u8; 21] {
+impl From<MacAfeRegFieldsOut> for [u8; 6] {
     fn from(val: MacAfeRegFieldsOut) -> Self {
         val.bits
     }
@@ -23024,21 +22514,6 @@ impl core::fmt::Debug for MacAfeRegFieldsOut {
         d.field("afe_latch_status", &self.afe_latch_status());
         d.field("afe_int_en", &self.afe_int_en());
         d.field("afe_ctrl", &self.afe_ctrl());
-        d.field("afe_rxien", &self.afe_rxien());
-        d.field("afe_rlout", &self.afe_rlout());
-        d.field("afe_rhout", &self.afe_rhout());
-        d.field("afe_rhint", &self.afe_rhint());
-        d.field("afe_cell_balance", &self.afe_cell_balance());
-        d.field("afe_adc_cc_ctrl", &self.afe_adc_cc_ctrl());
-        d.field("afe_adc_mux_ctrl", &self.afe_adc_mux_ctrl());
-        d.field("afe_led_ctrl", &self.afe_led_ctrl());
-        d.field("afe_hw_ctrl", &self.afe_hw_ctrl());
-        d.field("afe_tmr_ctrl", &self.afe_tmr_ctrl());
-        d.field("afe_protection", &self.afe_protection());
-        d.field("afe_ocd", &self.afe_ocd());
-        d.field("afe_scc", &self.afe_scc());
-        d.field("afe_scd_1", &self.afe_scd_1());
-        d.field("afe_scd_2", &self.afe_scd_2());
         d.finish()
     }
 }
@@ -23426,12 +22901,12 @@ impl core::ops::Not for MacManufacturingStatusFieldsOut {
 pub struct MacGaugingStatusFieldsOut {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 5],
+    bits: [u8; 6],
 }
 unsafe impl ::device_driver::Fieldset for MacGaugingStatusFieldsOut {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 5] };
+    const ZERO: Self = Self { bits: [0; 6] };
 }
 impl MacGaugingStatusFieldsOut {
     /// `bit 0` - Read the `fd` field.
@@ -23858,12 +23333,12 @@ impl Default for MacGaugingStatusFieldsOut {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 5]> for MacGaugingStatusFieldsOut {
-    fn from(bits: [u8; 5]) -> Self {
+impl From<[u8; 6]> for MacGaugingStatusFieldsOut {
+    fn from(bits: [u8; 6]) -> Self {
         Self { bits }
     }
 }
-impl From<MacGaugingStatusFieldsOut> for [u8; 5] {
+impl From<MacGaugingStatusFieldsOut> for [u8; 6] {
     fn from(val: MacGaugingStatusFieldsOut) -> Self {
         val.bits
     }
@@ -28376,32 +27851,32 @@ impl core::ops::Not for MacStaticDfSignatureFieldsOut {
 pub struct MacInstructionFlashSignatureFieldsOut {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 1],
+    bits: [u8; 2],
 }
 unsafe impl ::device_driver::Fieldset for MacInstructionFlashSignatureFieldsOut {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 1] };
+    const ZERO: Self = Self { bits: [0; 2] };
 }
 impl MacInstructionFlashSignatureFieldsOut {
-    /// `7:0` - Read the `insn_flsh_sig` field.
+    /// `15:0` - Read the `insn_flsh_sig` field.
     ///
     #[doc(alias = "INSN_FLSH_SIG")]
     #[must_use]
-    pub fn insn_flsh_sig(&self) -> u8 {
+    pub fn insn_flsh_sig(&self) -> u16 {
         let start = 0;
-        let end = 7;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
+        let end = 15;
+        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::LE>(&self.bits, start, end) };
         raw
     }
-    /// `7:0` - Set the `insn_flsh_sig` field.
+    /// `15:0` - Set the `insn_flsh_sig` field.
     ///
     #[doc(alias = "INSN_FLSH_SIG")]
-    pub fn set_insn_flsh_sig(&mut self, value: u8) {
+    pub fn set_insn_flsh_sig(&mut self, value: u16) {
         let start = 0;
-        let end = 7;
+        let end = 15;
         let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
+        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
     }
 }
 impl Default for MacInstructionFlashSignatureFieldsOut {
@@ -28409,12 +27884,12 @@ impl Default for MacInstructionFlashSignatureFieldsOut {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 1]> for MacInstructionFlashSignatureFieldsOut {
-    fn from(bits: [u8; 1]) -> Self {
+impl From<[u8; 2]> for MacInstructionFlashSignatureFieldsOut {
+    fn from(bits: [u8; 2]) -> Self {
         Self { bits }
     }
 }
-impl From<MacInstructionFlashSignatureFieldsOut> for [u8; 1] {
+impl From<MacInstructionFlashSignatureFieldsOut> for [u8; 2] {
     fn from(val: MacInstructionFlashSignatureFieldsOut) -> Self {
         val.bits
     }
@@ -28483,32 +27958,32 @@ impl core::ops::Not for MacInstructionFlashSignatureFieldsOut {
 pub struct MacHardwareVersionFieldsOut {
     #[doc(hidden)]
     /// The internal bits
-    bits: [u8; 1],
+    bits: [u8; 2],
 }
 unsafe impl ::device_driver::Fieldset for MacHardwareVersionFieldsOut {
     const METADATA: ::device_driver::FieldsetMetadata =
         ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
-    const ZERO: Self = Self { bits: [0; 1] };
+    const ZERO: Self = Self { bits: [0; 2] };
 }
 impl MacHardwareVersionFieldsOut {
-    /// `7:0` - Read the `hw_vers` field.
+    /// `15:0` - Read the `hw_vers` field.
     ///
     #[doc(alias = "HW_VERS")]
     #[must_use]
-    pub fn hw_vers(&self) -> u8 {
+    pub fn hw_vers(&self) -> u16 {
         let start = 0;
-        let end = 7;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
+        let end = 15;
+        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::LE>(&self.bits, start, end) };
         raw
     }
-    /// `7:0` - Set the `hw_vers` field.
+    /// `15:0` - Set the `hw_vers` field.
     ///
     #[doc(alias = "HW_VERS")]
-    pub fn set_hw_vers(&mut self, value: u8) {
+    pub fn set_hw_vers(&mut self, value: u16) {
         let start = 0;
-        let end = 7;
+        let end = 15;
         let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
+        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
     }
 }
 impl Default for MacHardwareVersionFieldsOut {
@@ -28516,12 +27991,12 @@ impl Default for MacHardwareVersionFieldsOut {
         <Self as ::device_driver::Fieldset>::ZERO
     }
 }
-impl From<[u8; 1]> for MacHardwareVersionFieldsOut {
-    fn from(bits: [u8; 1]) -> Self {
+impl From<[u8; 2]> for MacHardwareVersionFieldsOut {
+    fn from(bits: [u8; 2]) -> Self {
         Self { bits }
     }
 }
-impl From<MacHardwareVersionFieldsOut> for [u8; 1] {
+impl From<MacHardwareVersionFieldsOut> for [u8; 2] {
     fn from(val: MacHardwareVersionFieldsOut) -> Self {
         val.bits
     }
@@ -28594,104 +28069,104 @@ pub struct MacFirmwareVersionFieldsOut {
 }
 unsafe impl ::device_driver::Fieldset for MacFirmwareVersionFieldsOut {
     const METADATA: ::device_driver::FieldsetMetadata =
-        ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::LE);
+        ::device_driver::FieldsetMetadata::new().with_byte_order(::device_driver::ByteOrder::BE);
     const ZERO: Self = Self { bits: [0; 11] };
 }
 impl MacFirmwareVersionFieldsOut {
-    /// `15:0` - Read the `device_number` field.
+    /// `87:72` - Read the `device_number` field.
     ///
     #[doc(alias = "DEVICE_NUMBER")]
     #[must_use]
     pub fn device_number(&self) -> u16 {
-        let start = 0;
-        let end = 15;
-        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::LE>(&self.bits, start, end) };
+        let start = 72;
+        let end = 87;
+        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::BE>(&self.bits, start, end) };
         raw
     }
-    /// `31:16` - Read the `version` field.
+    /// `71:56` - Read the `version` field.
     ///
     #[doc(alias = "VERSION")]
     #[must_use]
     pub fn version(&self) -> u16 {
-        let start = 16;
-        let end = 31;
-        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::LE>(&self.bits, start, end) };
+        let start = 56;
+        let end = 71;
+        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::BE>(&self.bits, start, end) };
         raw
     }
-    /// `47:32` - Read the `build_number` field.
+    /// `55:40` - Read the `build_number` field.
     ///
     #[doc(alias = "BUILD_NUMBER")]
     #[must_use]
     pub fn build_number(&self) -> u16 {
-        let start = 32;
-        let end = 47;
-        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::LE>(&self.bits, start, end) };
+        let start = 40;
+        let end = 55;
+        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::BE>(&self.bits, start, end) };
         raw
     }
-    /// `55:48` - Read the `firmware_type` field.
+    /// `39:32` - Read the `firmware_type` field.
     ///
     #[doc(alias = "FIRMWARE_TYPE")]
     #[must_use]
     pub fn firmware_type(&self) -> u8 {
-        let start = 48;
-        let end = 55;
-        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::LE>(&self.bits, start, end) };
+        let start = 32;
+        let end = 39;
+        let raw = unsafe { ::device_driver::ops::load::<u8, ::device_driver::ops::BE>(&self.bits, start, end) };
         raw
     }
-    /// `71:56` - Read the `impedence_track_vers` field.
+    /// `31:16` - Read the `impedence_track_vers` field.
     ///
     #[doc(alias = "IMPEDENCE_TRACK_VERS")]
     #[must_use]
     pub fn impedence_track_vers(&self) -> u16 {
-        let start = 56;
-        let end = 71;
-        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::LE>(&self.bits, start, end) };
+        let start = 16;
+        let end = 31;
+        let raw = unsafe { ::device_driver::ops::load::<u16, ::device_driver::ops::BE>(&self.bits, start, end) };
         raw
     }
-    /// `15:0` - Set the `device_number` field.
+    /// `87:72` - Set the `device_number` field.
     ///
     #[doc(alias = "DEVICE_NUMBER")]
     pub fn set_device_number(&mut self, value: u16) {
-        let start = 0;
-        let end = 15;
+        let start = 72;
+        let end = 87;
         let raw = value;
-        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
+        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::BE>(raw, start, end, &mut self.bits) };
     }
-    /// `31:16` - Set the `version` field.
+    /// `71:56` - Set the `version` field.
     ///
     #[doc(alias = "VERSION")]
     pub fn set_version(&mut self, value: u16) {
-        let start = 16;
-        let end = 31;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `47:32` - Set the `build_number` field.
-    ///
-    #[doc(alias = "BUILD_NUMBER")]
-    pub fn set_build_number(&mut self, value: u16) {
-        let start = 32;
-        let end = 47;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `55:48` - Set the `firmware_type` field.
-    ///
-    #[doc(alias = "FIRMWARE_TYPE")]
-    pub fn set_firmware_type(&mut self, value: u8) {
-        let start = 48;
-        let end = 55;
-        let raw = value;
-        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
-    }
-    /// `71:56` - Set the `impedence_track_vers` field.
-    ///
-    #[doc(alias = "IMPEDENCE_TRACK_VERS")]
-    pub fn set_impedence_track_vers(&mut self, value: u16) {
         let start = 56;
         let end = 71;
         let raw = value;
-        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::LE>(raw, start, end, &mut self.bits) };
+        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::BE>(raw, start, end, &mut self.bits) };
+    }
+    /// `55:40` - Set the `build_number` field.
+    ///
+    #[doc(alias = "BUILD_NUMBER")]
+    pub fn set_build_number(&mut self, value: u16) {
+        let start = 40;
+        let end = 55;
+        let raw = value;
+        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::BE>(raw, start, end, &mut self.bits) };
+    }
+    /// `39:32` - Set the `firmware_type` field.
+    ///
+    #[doc(alias = "FIRMWARE_TYPE")]
+    pub fn set_firmware_type(&mut self, value: u8) {
+        let start = 32;
+        let end = 39;
+        let raw = value;
+        unsafe { ::device_driver::ops::store::<u8, ::device_driver::ops::BE>(raw, start, end, &mut self.bits) };
+    }
+    /// `31:16` - Set the `impedence_track_vers` field.
+    ///
+    #[doc(alias = "IMPEDENCE_TRACK_VERS")]
+    pub fn set_impedence_track_vers(&mut self, value: u16) {
+        let start = 16;
+        let end = 31;
+        let raw = value;
+        unsafe { ::device_driver::ops::store::<u16, ::device_driver::ops::BE>(raw, start, end, &mut self.bits) };
     }
 }
 impl Default for MacFirmwareVersionFieldsOut {
