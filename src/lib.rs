@@ -3,6 +3,7 @@
 
 use device_driver::{Block, FieldsetMetadata};
 use embedded_batteries_async::smart_battery;
+use embedded_hal_async::delay::DelayNs;
 
 #[allow(clippy::all)]
 #[allow(clippy::pedantic)]
@@ -23,8 +24,10 @@ const LARGEST_REG_BYTES: usize = 64;
 const LARGEST_CMD_BYTES: usize = 32;
 const LARGEST_BUF_BYTES: usize = 32;
 const SBS_ADDR_REG_SIZE: usize = 1;
-const MAC_CMD_RX_HEADER_SIZE_BYTES: usize = 3;
+const SMBUS_BLOCK_COUNT_SIZE_BYTES: usize = 1;
 const MAC_CMD_ADDR_SIZE_BYTES: u8 = 2;
+// A MAC response is a block read of 0x44: the count byte, then the echoed subcommand, then the data
+const MAC_CMD_RX_HEADER_SIZE_BYTES: usize = SMBUS_BLOCK_COUNT_SIZE_BYTES + MAC_CMD_ADDR_SIZE_BYTES as usize;
 const MAC_CMD_SBS_ADDR: u8 = 0x44;
 
 // Special case MAC commands
@@ -38,6 +41,15 @@ const MFG_INFO_CMD: u8 = 0x70;
 const CHRG_VOLTAGE_OVERRIDE_CMD: [u8; MAC_CMD_ADDR_SIZE_BYTES as usize] = 0x00B0u16.to_le_bytes();
 const CHRG_VOLTAGE_OVERRIDE_SIZE_BYTES: u8 = 10;
 const MFG_INFO_C_CMD: [u8; MAC_CMD_ADDR_SIZE_BYTES as usize] = 0x007Bu16.to_le_bytes();
+
+// Signature MACs. The gauge NACKs reads of these while it computes the signature, so the read has to
+// wait after the command is sent.
+const INSTRUCTION_FLASH_SIGNATURE_CMD: u16 = 0x0004;
+const STATIC_DF_SIGNATURE_CMD: u16 = 0x0005;
+const ALL_DF_SIGNATURE_CMD: u16 = 0x0009;
+const INSTRUCTION_FLASH_SIGNATURE_DELAY_MS: u32 = 500;
+const STATIC_DF_SIGNATURE_DELAY_MS: u32 = 1000;
+const ALL_DF_SIGNATURE_DELAY_MS: u32 = 1000;
 
 #[derive(Debug)]
 #[non_exhaustive]
@@ -90,23 +102,67 @@ impl<BUS: embedded_hal_async::i2c::I2c> Interface<BUS> {
             return Err(Bq41z50Error::DataTooLarge);
         }
 
+        self.mac_send(mac_command).await?;
+        self.read_block(MAC_CMD_SBS_ADDR, MAC_CMD_RX_HEADER_SIZE_BYTES, read)
+            .await
+    }
+
+    /// Write a MAC command to `ManufacturerBlockAccess()` without reading the response.
+    async fn mac_send(&mut self, mac_command: u16) -> Result<(), Bq41z50Error<BUS::Error>> {
         let mut write_buf = [0u8; 2 + MAC_CMD_ADDR_SIZE_BYTES as usize];
         write_buf[0] = MAC_CMD_SBS_ADDR;
         write_buf[1] = MAC_CMD_ADDR_SIZE_BYTES;
         write_buf[2..4].copy_from_slice(&mac_command.to_le_bytes());
 
-        let mut buf = [0u8; MAC_CMD_RX_HEADER_SIZE_BYTES + LARGEST_CMD_BYTES];
-        let response_len = MAC_CMD_RX_HEADER_SIZE_BYTES + read.len();
-
         self.bus
             .write(BQ41Z50_ADDR, &write_buf)
             .await
-            .map_err(Bq41z50Error::Bus)?;
+            .map_err(Bq41z50Error::Bus)
+    }
+
+    /// `SMBus` block read of `command`, dropping the `header_len` bytes the gauge sends ahead of the data.
+    ///
+    /// The header is the count byte for a block register, or the count byte and the echoed subcommand for
+    /// a MAC response read from `ManufacturerBlockAccess()`.
+    async fn read_block(
+        &mut self,
+        command: u8,
+        header_len: usize,
+        read: &mut [u8],
+    ) -> Result<(), Bq41z50Error<BUS::Error>> {
+        if read.len() > LARGEST_CMD_BYTES {
+            return Err(Bq41z50Error::DataTooLarge);
+        }
+
+        let mut buf = [0u8; MAC_CMD_RX_HEADER_SIZE_BYTES + LARGEST_CMD_BYTES];
+        let response_len = header_len + read.len();
+
         self.bus
-            .write_read(BQ41Z50_ADDR, &[MAC_CMD_SBS_ADDR], &mut buf[..response_len])
+            .write_read(BQ41Z50_ADDR, &[command], &mut buf[..response_len])
             .await
             .map_err(Bq41z50Error::Bus)?;
-        read.copy_from_slice(&buf[MAC_CMD_RX_HEADER_SIZE_BYTES..response_len]);
+        read.copy_from_slice(&buf[header_len..response_len]);
+        Ok(())
+    }
+
+    /// Read an `SMBus` block (a count byte followed by up to 32 bytes) into a NUL-terminated string.
+    ///
+    /// The count byte is dropped and the string is truncated to fit `out` with its terminator; the rest of
+    /// `out` is zero-filled.
+    async fn read_block_string(&mut self, command: u8, out: &mut [u8]) -> Result<(), Bq41z50Error<BUS::Error>> {
+        if out.is_empty() {
+            return Ok(());
+        }
+
+        let mut buf = [0u8; SMBUS_BLOCK_COUNT_SIZE_BYTES + LARGEST_BUF_BYTES];
+        self.bus
+            .write_read(BQ41Z50_ADDR, &[command], &mut buf)
+            .await
+            .map_err(Bq41z50Error::Bus)?;
+
+        let len = usize::from(buf[0]).min(LARGEST_BUF_BYTES).min(out.len() - 1);
+        out[..len].copy_from_slice(&buf[SMBUS_BLOCK_COUNT_SIZE_BYTES..SMBUS_BLOCK_COUNT_SIZE_BYTES + len]);
+        out[len..].fill(0);
         Ok(())
     }
 }
@@ -167,17 +223,18 @@ impl<BUS: embedded_hal_async::i2c::I2c> device_driver::AsyncCommandInterface for
         output: &mut [u8],
         _metadata_out: &FieldsetMetadata,
     ) -> Result<(), Self::Error> {
-        if output.is_empty() {
-            let mut buf = [0u8; 2 + MAC_CMD_ADDR_SIZE_BYTES as usize];
-            buf[0] = MAC_CMD_SBS_ADDR;
-            buf[1] = MAC_CMD_ADDR_SIZE_BYTES;
-            buf[2] = ((address >> 8) & 0xFF) as u8;
-            buf[3] = (address & 0xFF) as u8;
+        // Command addresses are 0x00_CC_SSSS: the SBS command, then the subcommand (little-endian).
+        let [_, sbs_command, subcommand_lo, subcommand_hi] = address.to_be_bytes();
 
-            self.bus.write(BQ41Z50_ADDR, &buf).await.map_err(Bq41z50Error::Bus)
+        if sbs_command != MAC_CMD_SBS_ADDR {
+            // An SMBus block register: no subcommand, just a block read with a count byte ahead of the data
+            return self.read_block(sbs_command, SMBUS_BLOCK_COUNT_SIZE_BYTES, output).await;
+        }
+
+        let mac_command = u16::from_le_bytes([subcommand_lo, subcommand_hi]);
+        if output.is_empty() {
+            self.mac_send(mac_command).await
         } else {
-            let address_bytes = address.to_be_bytes();
-            let mac_command = u16::from_le_bytes([address_bytes[2], address_bytes[3]]);
             self.mac_read(mac_command, output).await
         }
     }
@@ -407,6 +464,80 @@ impl<BUS: embedded_hal_async::i2c::I2c> Bq41z50<BUS> {
             .write(BQ41Z50_ADDR, &buf)
             .await
             .map_err(Bq41z50Error::Bus)
+    }
+
+    /// Read MAC 0x0004 `InstructionFlashSignature()`.
+    ///
+    /// The gauge NACKs the read while it computes the signature, so this sends the command, waits 500 ms on
+    /// `delay` and then reads it. Use this instead of `device.mac_instruction_flash_signature()`.
+    ///
+    /// # Errors
+    ///
+    /// Will return `Err` if an I2C bus error occurs.
+    pub async fn read_instruction_flash_signature(
+        &mut self,
+        delay: &mut impl DelayNs,
+    ) -> Result<device::MacInstructionFlashSignatureFieldsOut, Bq41z50Error<BUS::Error>> {
+        let mut data = [0u8; 2];
+        self.read_slow_mac(
+            INSTRUCTION_FLASH_SIGNATURE_CMD,
+            INSTRUCTION_FLASH_SIGNATURE_DELAY_MS,
+            delay,
+            &mut data,
+        )
+        .await?;
+        Ok(data.into())
+    }
+
+    /// Read MAC 0x0005 `StaticDFSignature()`.
+    ///
+    /// The gauge NACKs the read while it computes the signature, so this sends the command, waits 1 s on
+    /// `delay` and then reads it. Use this instead of `device.mac_static_df_signature()`.
+    ///
+    /// # Errors
+    ///
+    /// Will return `Err` if an I2C bus error occurs.
+    pub async fn read_static_df_signature(
+        &mut self,
+        delay: &mut impl DelayNs,
+    ) -> Result<device::MacStaticDfSignatureFieldsOut, Bq41z50Error<BUS::Error>> {
+        let mut data = [0u8; 2];
+        self.read_slow_mac(STATIC_DF_SIGNATURE_CMD, STATIC_DF_SIGNATURE_DELAY_MS, delay, &mut data)
+            .await?;
+        Ok(data.into())
+    }
+
+    /// Read MAC 0x0009 `AllDFSignature()`.
+    ///
+    /// The gauge NACKs the read while it computes the signature, so this sends the command, waits 1 s on
+    /// `delay` and then reads it. Use this instead of `device.mac_all_df_signature()`.
+    ///
+    /// # Errors
+    ///
+    /// Will return `Err` if an I2C bus error occurs.
+    pub async fn read_all_df_signature(
+        &mut self,
+        delay: &mut impl DelayNs,
+    ) -> Result<device::MacStaticChemDfSigFieldsOut, Bq41z50Error<BUS::Error>> {
+        let mut data = [0u8; 2];
+        self.read_slow_mac(ALL_DF_SIGNATURE_CMD, ALL_DF_SIGNATURE_DELAY_MS, delay, &mut data)
+            .await?;
+        Ok(data.into())
+    }
+
+    async fn read_slow_mac(
+        &mut self,
+        mac_command: u16,
+        delay_ms: u32,
+        delay: &mut impl DelayNs,
+        read: &mut [u8],
+    ) -> Result<(), Bq41z50Error<BUS::Error>> {
+        let interface = self.device.interface();
+        interface.mac_send(mac_command).await?;
+        delay.delay_ms(delay_ms).await;
+        interface
+            .read_block(MAC_CMD_SBS_ADDR, MAC_CMD_RX_HEADER_SIZE_BYTES, read)
+            .await
     }
 
     /// Seal the fuel gauge.

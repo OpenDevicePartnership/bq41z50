@@ -27,31 +27,34 @@ device Device {
     command MAC_FIRMWARE_VERSION {
         address: 0x440200,
         fields-out: fieldset MAC_FIRMWARE_VERSIONFieldsOut {
+            // The gauge sends the multi-byte fields big-endian. With BE the whole 11-byte buffer is
+            // reversed, so byte 0 holds bits 87:80 and byte 10 holds bits 7:0.
+            byte-order: BE,
             size-bytes: 11,
 
-            field DEVICE_NUMBER 15:0 -> uint,
-            field VERSION 31:16 -> uint,
-            field BUILD_NUMBER 47:32 -> uint,
-            field FIRMWARE_TYPE 55:48 -> uint,
-            field IMPEDENCE_TRACK_VERS 71:56 -> uint,
+            field DEVICE_NUMBER 87:72 -> uint,
+            field VERSION 71:56 -> uint,
+            field BUILD_NUMBER 55:40 -> uint,
+            field FIRMWARE_TYPE 39:32 -> uint,
+            field IMPEDENCE_TRACK_VERS 31:16 -> uint,
         },
     },
 
     command MAC_HARDWARE_VERSION {
         address: 0x440300,
         fields-out: fieldset MAC_HARDWARE_VERSIONFieldsOut {
-            size-bytes: 1,
+            size-bytes: 2,
 
-            field HW_VERS 7:0 -> uint,
+            field HW_VERS 15:0 -> uint,
         },
     },
 
     command MAC_INSTRUCTION_FLASH_SIGNATURE {
         address: 0x440400,
         fields-out: fieldset MAC_INSTRUCTION_FLASH_SIGNATUREFieldsOut {
-            size-bytes: 1,
+            size-bytes: 2,
 
-            field INSN_FLSH_SIG 7:0 -> uint,
+            field INSN_FLSH_SIG 15:0 -> uint,
         },
     },
 
@@ -426,7 +429,7 @@ device Device {
     command MAC_GAUGING_STATUS {
         address: 0x445600,
         fields-out: fieldset MAC_GAUGING_STATUSFieldsOut {
-            size-bytes: 5,
+            size-bytes: 6,
 
             field FD 0 -> bool,
             field FC 1 -> bool,
@@ -476,7 +479,7 @@ device Device {
     command MAC_AFE_REG {
         address: 0x445800,
         fields-out: fieldset MAC_AFE_REGFieldsOut {
-            size-bytes: 21,
+            size-bytes: 6,
 
             field AFE_INT_STATUS 7:0 -> uint,
             field AFE_FET_STATUS 15:8 -> uint,
@@ -484,21 +487,6 @@ device Device {
             field AFE_LATCH_STATUS 31:24 -> uint,
             field AFE_INT_EN 39:32 -> uint,
             field AFE_CTRL 47:40 -> uint,
-            field AFE_RXIEN 55:48 -> uint,
-            field AFE_RLOUT 63:56 -> uint,
-            field AFE_RHOUT 71:64 -> uint,
-            field AFE_RHINT 79:72 -> uint,
-            field AFE_CELL_BALANCE 87:80 -> uint,
-            field AFE_ADC_CC_CTRL 95:88 -> uint,
-            field AFE_ADC_MUX_CTRL 103:96 -> uint,
-            field AFE_LED_CTRL 111:104 -> uint,
-            field AFE_HW_CTRL 119:112 -> uint,
-            field AFE_TMR_CTRL 127:120 -> uint,
-            field AFE_PROTECTION 135:128 -> uint,
-            field AFE_OCD 143:136 -> uint,
-            field AFE_SCC 151:144 -> uint,
-            field AFE_SCD1 159:152 -> uint,
-            field AFE_SCD2 167:160 -> uint,
         },
     },
 
@@ -979,7 +967,7 @@ device Device {
     command MAC_CB_STATUS {
         address: 0x447600,
         fields-out: fieldset MAC_CB_STATUSFieldsOut {
-            size-bytes: 19,
+            size-bytes: 20,
 
             field CB_TIME_0 15:0 -> uint,
             field CB_TIME_1 31:16 -> uint,
@@ -1498,10 +1486,15 @@ device Device {
         },
     },
 
-    register SAFETY_ALERT {
-        address: 0x50,
-        access: RO,
-        fields: fieldset _ {
+    // SMBus block registers (0x50-0x58, 0x60-0x67, 0x6A-0x6B, 0x71-0x78) are commands, not registers.
+    // The gauge answers them with a count byte before the data, exactly like a MAC read but without a
+    // subcommand. Command addresses are 0x00_CC_SSSS: CC is the SBS command and SSSS the subcommand
+    // (little-endian). MAC commands use CC = 0x44 (ManufacturerBlockAccess); these use their own SBS
+    // command and no subcommand, so SafetyAlert (0x50) is 0x500000. The interface reads one count byte
+    // (plus the two echoed subcommand bytes for MAC) ahead of the data and drops them.
+    command SAFETY_ALERT {
+        address: 0x500000,
+        fields-out: fieldset _ {
             size-bytes: 4,
 
             field CUV 0 RO -> bool,
@@ -1533,10 +1526,9 @@ device Device {
         },
     },
 
-    register SAFETY_STATUS {
-        address: 0x51,
-        access: RO,
-        fields: fieldset _ {
+    command SAFETY_STATUS {
+        address: 0x510000,
+        fields-out: fieldset _ {
             size-bytes: 4,
 
             field CUV 0 RO -> bool,
@@ -1570,10 +1562,9 @@ device Device {
         },
     },
 
-    register PF_ALERT {
-        address: 0x52,
-        access: RO,
-        fields: fieldset _ {
+    command PF_ALERT {
+        address: 0x520000,
+        fields-out: fieldset _ {
             size-bytes: 4,
 
             field SUV 0 RO -> bool,
@@ -1607,10 +1598,9 @@ device Device {
         },
     },
 
-    register PF_STATUS {
-        address: 0x53,
-        access: RO,
-        fields: fieldset _ {
+    command PF_STATUS {
+        address: 0x530000,
+        fields-out: fieldset _ {
             size-bytes: 4,
 
             field SUV 0 RO -> bool,
@@ -1647,10 +1637,9 @@ device Device {
         },
     },
 
-    register OPERATION_STATUS {
-        address: 0x54,
-        access: RO,
-        fields: fieldset _ {
+    command OPERATION_STATUS {
+        address: 0x540000,
+        fields-out: fieldset _ {
             size-bytes: 4,
 
             field PRES 0 RO -> bool,
@@ -1691,10 +1680,9 @@ device Device {
         },
     },
 
-    register CHARGING_STATUS {
-        address: 0x55,
-        access: RO,
-        fields: fieldset _ {
+    command CHARGING_STATUS {
+        address: 0x550000,
+        fields-out: fieldset _ {
             size-bytes: 5,
 
             field UT 0 RO -> bool,
@@ -1738,11 +1726,10 @@ device Device {
         },
     },
 
-    register GAUGING_STATUS {
-        address: 0x56,
-        access: RO,
-        fields: fieldset _ {
-            size-bytes: 4,
+    command GAUGING_STATUS {
+        address: 0x560000,
+        fields-out: fieldset _ {
+            size-bytes: 6,
 
             field FD 0 RO -> bool,
             field FC 1 RO -> bool,
@@ -1769,10 +1756,9 @@ device Device {
         },
     },
 
-    register MANUFACTURING_STATUS {
-        address: 0x57,
-        access: RO,
-        fields: fieldset _ {
+    command MANUFACTURING_STATUS {
+        address: 0x570000,
+        fields-out: fieldset _ {
             size-bytes: 2,
 
             field PCHG_EN 0 RO -> bool,
@@ -1790,11 +1776,10 @@ device Device {
         },
     },
 
-    register AFE_REG {
-        address: 0x58,
-        access: RO,
-        fields: fieldset _ {
-            size-bytes: 21,
+    command AFE_REG {
+        address: 0x580000,
+        fields-out: fieldset _ {
+            size-bytes: 6,
 
             field AFE_INT_STATUS 7:0 RO -> uint,
             field AFE_FET_STATUS 15:8 RO -> uint,
@@ -1802,21 +1787,6 @@ device Device {
             field AFE_LATCH_STATUS 31:24 RO -> uint,
             field AFE_INT_EN 39:32 RO -> uint,
             field AFE_CTRL 47:40 RO -> uint,
-            field AFE_RXIEN 55:48 RO -> uint,
-            field AFE_RLOUT 63:56 RO -> uint,
-            field AFE_RHOUT 71:64 RO -> uint,
-            field AFE_RHINT 79:72 RO -> uint,
-            field AFE_CELL_BALANCE 87:80 RO -> uint,
-            field AFE_ADC_CC_CTRL 95:88 RO -> uint,
-            field AFE_ADC_MUX_CTRL 103:96 RO -> uint,
-            field AFE_LED_CTRL 111:104 RO -> uint,
-            field AFE_HW_CTRL 119:112 RO -> uint,
-            field AFE_TMR_CTRL 127:120 RO -> uint,
-            field AFE_PROTECTION 135:128 RO -> uint,
-            field AFE_OCD 143:136 RO -> uint,
-            field AFE_SCC 151:144 RO -> uint,
-            field AFE_SCD1 159:152 RO -> uint,
-            field AFE_SCD2 167:160 RO -> uint,
         },
     },
 
@@ -1883,10 +1853,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_1 {
-        address: 0x60,
-        access: RO,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_1 {
+        address: 0x600000,
+        fields-out: fieldset _ {
             size-bytes: 26,
 
             field CELL_1_MAX_V 15:0 RO -> uint,
@@ -1905,10 +1874,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_2 {
-        address: 0x61,
-        access: RO,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_2 {
+        address: 0x610000,
+        fields-out: fieldset _ {
             size-bytes: 20,
 
             field MIN_FCC_SOH_MAH 15:0 RO -> uint,
@@ -1920,20 +1888,18 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_3 {
-        address: 0x62,
-        access: RO,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_3 {
+        address: 0x620000,
+        fields-out: fieldset _ {
             size-bytes: 4,
 
             field TOTAL_FW_RUNTIME 31:0 RO -> uint,
         },
     },
 
-    register LIFETIME_DATA_BLOCK_4 {
-        address: 0x63,
-        access: RO,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_4 {
+        address: 0x630000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field NUM_COV_EVENTS 15:0 RO -> uint,
@@ -1955,10 +1921,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_5 {
-        address: 0x64,
-        access: RO,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_5 {
+        address: 0x640000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field NUM_ASCC_EVENTS 15:0 RO -> uint,
@@ -1980,9 +1945,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_6 {
-        address: 0x65,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_6 {
+        address: 0x650000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field TIME_SPENT_UT_RSOC_A 31:0 RO -> uint,
@@ -1996,9 +1961,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_7 {
-        address: 0x66,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_7 {
+        address: 0x660000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field TIME_SPENT_LT_RSOC_A 31:0 RO -> uint,
@@ -2012,9 +1977,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_8 {
-        address: 0x67,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_8 {
+        address: 0x670000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field TIME_SPENT_STL_RSOC_A 31:0 RO -> uint,
@@ -2050,9 +2015,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_11 {
-        address: 0x6A,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_11 {
+        address: 0x6A0000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field TIME_SPENT_HT_RSOC_A 31:0 RO -> uint,
@@ -2066,9 +2031,9 @@ device Device {
         },
     },
 
-    register LIFETIME_DATA_BLOCK_12 {
-        address: 0x6B,
-        fields: fieldset _ {
+    command LIFETIME_DATA_BLOCK_12 {
+        address: 0x6B0000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field TIME_SPENT_OT_RSOC_A 31:0 RO -> uint,
@@ -2082,10 +2047,9 @@ device Device {
         },
     },
 
-    register DA_STATUS_1 {
-        address: 0x71,
-        access: RO,
-        fields: fieldset _ {
+    command DA_STATUS_1 {
+        address: 0x710000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field CELL_VOLTAGE_1 15:0 RO -> uint,
@@ -2107,10 +2071,9 @@ device Device {
         },
     },
 
-    register DA_STATUS_2 {
-        address: 0x72,
-        access: RO,
-        fields: fieldset _ {
+    command DA_STATUS_2 {
+        address: 0x720000,
+        fields-out: fieldset _ {
             size-bytes: 26,
 
             field INT_TEMP 15:0 RO -> uint,
@@ -2129,10 +2092,9 @@ device Device {
         },
     },
 
-    register GAUGE_STATUS_1 {
-        address: 0x73,
-        access: RO,
-        fields: fieldset _ {
+    command GAUGE_STATUS_1 {
+        address: 0x730000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field TRUE_REM_Q 15:0 RO -> uint,
@@ -2154,9 +2116,9 @@ device Device {
         },
     },
 
-    register GAUGE_STATUS_2 {
-        address: 0x74,
-        fields: fieldset _ {
+    command GAUGE_STATUS_2 {
+        address: 0x740000,
+        fields-out: fieldset _ {
             size-bytes: 32,
 
             field PACK_GRID 7:0 RO -> uint,
@@ -2173,7 +2135,7 @@ device Device {
             field CELL_GRID_2 39:32 RO -> uint,
             field CELL_GRID_3 47:40 RO -> uint,
             field STATE_TIME 79:48 RO -> uint,
-            field DOD0_0 95:80 -> uint,
+            field DOD0_0 95:80 RO -> uint,
             field DOD0_1 111:96 RO -> uint,
             field DOD0_2 127:112 RO -> uint,
             field DOD0_3 143:128 RO -> uint,
@@ -2187,11 +2149,10 @@ device Device {
         },
     },
 
-    register GAUGE_STATUS_3 {
-        address: 0x75,
-        access: RO,
-        fields: fieldset _ {
-            size-bytes: 24,
+    command GAUGE_STATUS_3 {
+        address: 0x750000,
+        fields-out: fieldset _ {
+            size-bytes: 32,
 
             field QMAX_0 15:0 RO -> uint,
             field QMAX_1 31:16 RO -> uint,
@@ -2208,11 +2169,10 @@ device Device {
         },
     },
 
-    register CB_STATUS {
-        address: 0x76,
-        access: RO,
-        fields: fieldset _ {
-            size-bytes: 19,
+    command CB_STATUS {
+        address: 0x760000,
+        fields-out: fieldset _ {
+            size-bytes: 20,
 
             field CB_TIME_0 15:0 RO -> uint,
             field CB_TIME_1 31:16 RO -> uint,
@@ -2227,10 +2187,9 @@ device Device {
         },
     },
 
-    register STATE_OF_HEALTH {
-        address: 0x77,
-        access: RO,
-        fields: fieldset _ {
+    command STATE_OF_HEALTH {
+        address: 0x770000,
+        fields-out: fieldset _ {
             size-bytes: 4,
 
             field SOH_FCC 15:0 RO -> uint,
@@ -2238,10 +2197,9 @@ device Device {
         },
     },
 
-    register FILTER_CAPACITY {
-        address: 0x78,
-        access: RO,
-        fields: fieldset _ {
+    command FILTER_CAPACITY {
+        address: 0x780000,
+        fields-out: fieldset _ {
             size-bytes: 8,
 
             field FILT_REM_CAP 15:0 RO -> uint,

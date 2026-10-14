@@ -357,3 +357,213 @@ async fn oversized_data_is_rejected_before_bus_access() {
     );
     driver.device.interface().bus.done();
 }
+
+/// Records every delay so tests can check the wait between a MAC command and its read.
+#[derive(Default)]
+struct RecordingDelay {
+    total_ns: u64,
+}
+
+impl embedded_hal_async::delay::DelayNs for RecordingDelay {
+    async fn delay_ns(&mut self, ns: u32) {
+        self.total_ns += u64::from(ns);
+    }
+}
+
+#[tokio::test]
+async fn block_register_read_of_safety_alert_is_not_shifted() {
+    let expectations = vec![embedded_hal_mock::eh1::i2c::Transaction::write_read(
+        crate::BQ41Z50_ADDR,
+        vec![0x50],
+        vec![0x04, 0x00, 0x00, 0x00, 0x00],
+    )];
+    let mut driver = Bq41z50::new(Mock::new(&expectations));
+
+    let alert: [u8; 4] = driver.device.safety_alert().dispatch_out_async().await.unwrap().into();
+
+    assert_eq!(alert, [0; 4]);
+    driver.device.interface().bus.done();
+}
+
+#[tokio::test]
+async fn full_32_byte_block_register_reads_33_bytes() {
+    // GaugeStatus3() is the largest block: count byte 0x20, then 32 data bytes.
+    let mut response = vec![0x20];
+    response.extend(1..=32u8);
+    let expectations = vec![embedded_hal_mock::eh1::i2c::Transaction::write_read(
+        crate::BQ41Z50_ADDR,
+        vec![0x75],
+        response,
+    )];
+    let mut driver = Bq41z50::new(Mock::new(&expectations));
+
+    let status = driver.device.gauge_status_3().dispatch_out_async().await.unwrap();
+    let raw: [u8; 32] = status.into();
+
+    assert_eq!(status.qmax_0(), 0x0201);
+    assert_eq!(raw[31], 32);
+    driver.device.interface().bus.done();
+}
+
+#[tokio::test]
+async fn ddsl_sizes_match_the_gauge() {
+    let mut gauging_status = vec![0x06];
+    gauging_status.extend_from_slice(&[0x01, 0x00, 0x00, 0x01, 0xAA, 0xBB]);
+    let expectations = vec![
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(crate::BQ41Z50_ADDR, vec![0x56], gauging_status),
+        embedded_hal_mock::eh1::i2c::Transaction::write(crate::BQ41Z50_ADDR, vec![0x44, 0x02, 0x03, 0x00]),
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x44],
+            vec![0x04, 0x03, 0x00, 0x34, 0x12],
+        ),
+    ];
+    let mut driver = Bq41z50::new(Mock::new(&expectations));
+
+    let status = driver.device.gauging_status().dispatch_out_async().await.unwrap();
+    assert!(status.fd());
+    assert!(status.perf_mode());
+    let hw_version = driver
+        .device
+        .mac_hardware_version()
+        .dispatch_out_async()
+        .await
+        .unwrap()
+        .hw_vers();
+    assert_eq!(hw_version, 0x1234);
+    driver.device.interface().bus.done();
+}
+
+#[tokio::test]
+async fn firmware_version_fields_are_big_endian() {
+    let expectations = vec![
+        embedded_hal_mock::eh1::i2c::Transaction::write(crate::BQ41Z50_ADDR, vec![0x44, 0x02, 0x02, 0x00]),
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x44],
+            vec![
+                0x0D, 0x02, 0x00, // count, echoed command
+                0x41, 0x50, // device number
+                0x01, 0x02, // version 1.02
+                0x00, 0x23, // build 35
+                0x01, // firmware type
+                0x05, 0x00, // impedance track version
+                0x00, 0x00, // reserved
+            ],
+        ),
+    ];
+    let mut driver = Bq41z50::new(Mock::new(&expectations));
+
+    let version = driver.device.mac_firmware_version().dispatch_out_async().await.unwrap();
+
+    assert_eq!(version.device_number(), 0x4150);
+    assert_eq!(version.version(), 0x0102);
+    assert_eq!(version.build_number(), 35);
+    assert_eq!(version.firmware_type(), 0x01);
+    assert_eq!(version.impedence_track_vers(), 0x0500);
+    driver.device.interface().bus.done();
+}
+
+#[tokio::test]
+async fn signature_macs_wait_before_reading() {
+    let expectations = vec![
+        embedded_hal_mock::eh1::i2c::Transaction::write(crate::BQ41Z50_ADDR, vec![0x44, 0x02, 0x04, 0x00]),
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x44],
+            vec![0x04, 0x04, 0x00, 0xCD, 0xAB],
+        ),
+        embedded_hal_mock::eh1::i2c::Transaction::write(crate::BQ41Z50_ADDR, vec![0x44, 0x02, 0x05, 0x00]),
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x44],
+            vec![0x04, 0x05, 0x00, 0x34, 0x92],
+        ),
+        embedded_hal_mock::eh1::i2c::Transaction::write(crate::BQ41Z50_ADDR, vec![0x44, 0x02, 0x09, 0x00]),
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x44],
+            vec![0x04, 0x09, 0x00, 0x78, 0x56],
+        ),
+    ];
+    let mut driver = Bq41z50::new(Mock::new(&expectations));
+    let mut delay = RecordingDelay::default();
+
+    let insn = driver.read_instruction_flash_signature(&mut delay).await.unwrap();
+    assert_eq!(insn.insn_flsh_sig(), 0xABCD);
+    assert_eq!(delay.total_ns, 500_000_000);
+
+    let static_df = driver.read_static_df_signature(&mut delay).await.unwrap();
+    assert_eq!(static_df.static_df_sig(), 0x1234);
+    assert!(static_df.sig_mismatch());
+    assert_eq!(delay.total_ns, 1_500_000_000);
+
+    let all_df = driver.read_all_df_signature(&mut delay).await.unwrap();
+    assert_eq!(all_df.static_chem_df_sig(), 0x5678);
+    assert_eq!(delay.total_ns, 2_500_000_000);
+    driver.device.interface().bus.done();
+}
+
+#[tokio::test]
+async fn battery_status_returns_the_error_code_instead_of_failing() {
+    use embedded_batteries_async::smart_battery::SmartBattery;
+
+    // INIT set, EC = Busy from the previous command.
+    let expectations = vec![embedded_hal_mock::eh1::i2c::Transaction::write_read(
+        crate::BQ41Z50_ADDR,
+        vec![0x16],
+        vec![0x81, 0x00],
+    )];
+    let mut driver = Bq41z50::new(Mock::new(&expectations));
+
+    let status = driver.battery_status().await.unwrap();
+
+    assert_eq!(status.error_code(), smart_battery::ErrorCode::Busy);
+    assert!(status.initialized());
+    driver.device.interface().bus.done();
+}
+
+fn sbs_string_block(text: &[u8]) -> Vec<u8> {
+    let mut block = vec![u8::try_from(text.len()).unwrap()];
+    block.extend_from_slice(text);
+    block.resize(33, 0xFF);
+    block
+}
+
+#[tokio::test]
+async fn sbs_strings_drop_the_length_byte_and_are_nul_terminated() {
+    use embedded_batteries_async::smart_battery::SmartBattery;
+
+    let expectations = vec![
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x20],
+            sbs_string_block(b"Texas Inst."),
+        ),
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x21],
+            sbs_string_block(b"bq41z50"),
+        ),
+        embedded_hal_mock::eh1::i2c::Transaction::write_read(
+            crate::BQ41Z50_ADDR,
+            vec![0x22],
+            sbs_string_block(b"LION"),
+        ),
+    ];
+    let mut driver = Bq41z50::new(Mock::new(&expectations));
+
+    let mut name = [0xEEu8; 16];
+    driver.manufacturer_name(&mut name).await.unwrap();
+    assert_eq!(&name, b"Texas Inst.\0\0\0\0\0");
+
+    // Truncated to fit, still NUL-terminated.
+    let mut name = [0xEEu8; 4];
+    driver.device_name(&mut name).await.unwrap();
+    assert_eq!(&name, b"bq4\0");
+
+    let mut chemistry = [0xEEu8; 8];
+    driver.device_chemistry(&mut chemistry).await.unwrap();
+    assert_eq!(&chemistry, b"LION\0\0\0\0");
+    driver.device.interface().bus.done();
+}
