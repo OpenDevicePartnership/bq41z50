@@ -14,13 +14,17 @@ name: device-driver-pregen-check
 jobs:
   device-driver-pregen-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     name: device-driver-pregen-check
     steps:
       - uses: actions/checkout@v7
         with:
           submodules: true
+          persist-credentials: false
       - name: Check generated device driver
-        uses: tullom/device-driver-pregen-check@v1.0.0
+        uses: tullom/device-driver-pregen-check@v1.2.0
         with:
           source: bq41z50.ddsl
           generated-file: src/device.rs
+          cli-version: '2.1.0'
+          rust-toolchain: '1.94.0'
