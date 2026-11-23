@@ -20,7 +20,9 @@ jobs:
         with:
           submodules: true
       - name: Check generated device driver
-        uses: tullom/device-driver-pregen-check@v1.0.0
+        uses: tullom/device-driver-pregen-check@v1.2.0
         with:
+          rust-toolchain: '1.94.0'
+          cli-version: '2.1.1'
           source: bq41z50.ddsl
           generated-file: src/device.rs
